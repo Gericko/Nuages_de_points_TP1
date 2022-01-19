@@ -45,9 +45,9 @@ import time
 def cloud_decimation(points, colors, labels, factor):
 
     # YOUR CODE
-    decimated_points = None
-    decimated_colors = None
-    decimated_labels = None
+    decimated_points = points[: :factor]
+    decimated_colors = colors[: :factor]
+    decimated_labels = labels[: :factor]
 
     return decimated_points, decimated_colors, decimated_labels
 
