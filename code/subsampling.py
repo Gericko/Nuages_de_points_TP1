@@ -45,9 +45,10 @@ import time
 def cloud_decimation(points, colors, labels, factor):
 
     # YOUR CODE
-    decimated_points = points[: :factor]
-    decimated_colors = colors[: :factor]
-    decimated_labels = labels[: :factor]
+    nb_points = points.shape[0]
+    decimated_points = points[0:nb_points:factor]
+    decimated_colors = colors[0:nb_points:factor]
+    decimated_labels =labels[0:nb_points:factor]
 
     return decimated_points, decimated_colors, decimated_labels
 
@@ -74,7 +75,7 @@ if __name__ == '__main__':
     #
 
     # Path of the file
-    file_path = '../data/indoor_scan.ply'
+    file_path = 'data/indoor_scan.ply'
 
     # Load point cloud
     data = read_ply(file_path)
@@ -98,7 +99,7 @@ if __name__ == '__main__':
     print('decimation done in {:.3f} seconds'.format(t1 - t0))
 
     # Save
-    write_ply('../decimated.ply', [decimated_points, decimated_colors, decimated_labels], ['x', 'y', 'z', 'red', 'green', 'blue', 'label'])
+    write_ply('data/decimated.ply', [decimated_points, decimated_colors, decimated_labels], ['x', 'y', 'z', 'red', 'green', 'blue', 'label'])
 
     
     print('Done')

@@ -38,21 +38,13 @@ from ply import write_ply, read_ply
 #   Here you can define useful functions to be used in the main
 #
 
-def transformation(points):
-    centroid = np.mean(points, axis=0)
-    transformed_points = points - centroid
-    transformed_points = transformed_points / 2
-    transformed_points = transformed_points + centroid
-    vector = np.array([0, -0.1, 0])
-    transformed_points = transformed_points + vector
-    return transformed_points
 
 # ------------------------------------------------------------------------------------------
 #
 #           Main
 #       \**********/
 #
-# 
+#
 #   Here you can define the instructions that are called when you execute this file
 #
 
@@ -60,28 +52,37 @@ if __name__ == '__main__':
 
     # Load point cloud
     # ****************
-    #
 
     # Path of the file
-    file_path = '../data/bunny.ply'
+    file_path = 'data/bunny.ply'
 
     # Load point cloud
     data = read_ply(file_path)
 
     # Concatenate x, y, and z in a (N*3) point matrix
     points = np.vstack((data['x'], data['y'], data['z'])).T
-
+    
     # Concatenate R, G, and B channels in a (N*3) color matrix
     colors = np.vstack((data['red'], data['green'], data['blue'])).T
 
     # Transform point cloud
     # *********************
-    #
+    
+    # Center the cloud on its centroid
+    transformed_points = points - points.mean(axis=0)
+
+    # Divide the scale by 2
+    transformed_points = transformed_points*0.5
+
+    # Recenter the cloud at the original position. 
+    transformed_points = transformed_points - (transformed_points.mean(axis=0)-points.mean(axis=0))
+    
+    # Apply a -10cm translation along y-axis.
+    transformed_points[:,1] =  transformed_points[:,1]-0.1
+
     #   Follow the instructions step by step
     #
 
-    # Replace this line by your code
-    transformed_points = transformation(points)
 
     # Save point cloud
     # *********************
@@ -91,6 +92,7 @@ if __name__ == '__main__':
     #
 
     # Save point cloud
-    write_ply('../little_bunny.ply', [transformed_points, colors], ['x', 'y', 'z', 'red', 'green', 'blue'])
+    write_ply('data/little_bunny.ply',
+              [transformed_points, colors], ['x', 'y', 'z', 'red', 'green', 'blue'])
 
     print('Done')
